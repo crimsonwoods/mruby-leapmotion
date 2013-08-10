@@ -3,6 +3,10 @@ mruby-leapmotion
 
 _mruby-leapmotion_ wrapped 'LeapSDK'.
 
+# Supported platforms
+----
+
+- Ubuntu 12.04 LTS
 
 # How to build
 ----
@@ -23,6 +27,16 @@ edit your build_config.rb like this:
 
 and run 'make' command.
 
+
+# Sample
+----
+
+[Sample code](/sample/leapmotion.rb) is contained into 'sample' directory.
+
+# How to run
+----
+
+1. Connect your LeapMotion
 
 # Module
 ----
@@ -131,4 +145,6 @@ and run 'make' command.
 |(missing)       |operator!=                 |not defined    |
 |to_s            |toString                   |implemented    |
 
+# License
 
+MIT License is applied.
