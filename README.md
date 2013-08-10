@@ -11,7 +11,12 @@ _mruby-leapmotion_ wrapped 'LeapSDK'.
 # How to build
 ----
 
-edit your build_config.rb like this:
+1. download and extract [LeapSDK](https://developer.leapmotion.com/downloads)
+2. edit your 'build_config.rb'
+3. run 'make' command.
+
+
+build_config.rb:
 
     conf.gem :github => 'crimsonwoods/mruby-leapmotion', :branch => 'master'
     
@@ -25,8 +30,6 @@ edit your build_config.rb like this:
       linker.library_paths << "/path/to/your/LeapSDK/lib/<platform>/"
     end
 
-and run 'make' command.
-
 
 # Sample
 ----
@@ -36,7 +39,11 @@ and run 'make' command.
 # How to run
 ----
 
-1. Connect your LeapMotion
+1. connect your Leap Motion
+2. wait for chaning, the color of indicator will be green.
+3. set LeapSDK library path to 'LD_LIBRARY_PATH'.
+4. run mruby with sample code or your code.
+
 
 # Module
 ----
