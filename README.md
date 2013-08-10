@@ -68,15 +68,67 @@ and run 'make' command.
 
 ### Instance methods
 
-|Name            |Status         |
-|:---------------|:-------------:|
-|add_listener    |implemented    |
-|remove_listener |implemented    |
-|frame           |implemented    |
-|config          |not implemented|
-|devices         |not implemented|
-|connected?      |implemented    |
-|focus?          |implemented    |
-|enable_gesture  |implemented    |
-|gesture_enabled?|implemented    |
+|Name            |LeapSDK API      |Status         |
+|:---------------|:----------------|:-------------:|
+|add_listener    |addListener      |implemented    |
+|remove_listener |removeListener   |implemented    |
+|frame           |frame            |implemented    |
+|config          |config           |not implemented|
+|devices         |devices          |not implemented|
+|connected?      |isConnected      |implemented    |
+|focus?          |hasFocus         |implemented    |
+|enable_gesture  |enableGesture    |implemented    |
+|gesture_enabled?|isGestureEnabled |implemented    |
+|(missing)       |policyFlags      |not defined    |
+|(missing)       |setPolicyFlags   |not defined    |
+|(missing)       |locatedScreens   |not defined    |
+|(missing)       |calibratedScreens|not defined    |
+
+## LeapMotion::Listener
+
+### Instance methods
+
+|Name            |LeapSDK API      |Status         |
+|:---------------|:----------------|:-------------:|
+|on_init         |onInit           |implemented    |
+|on_connect      |onConnect        |implemented    |
+|on_disconnect   |onDisconnect     |implemented    |
+|on_exit         |onExit           |implemented    |
+|on_frame        |onFrame          |implemented    |
+|on_focus_gained |onFocusGained    |implemented    |
+|on_focus_lost   |onFocusLost      |implemented    |
+
+## LeapMotion::Frame
+
+### Instance methods
+
+|Name            |LeapSDK API                |Status         |
+|:---------------|:--------------------------|:-------------:|
+|id              |id                         |implemented    |
+|timestamp       |timestamp                  |implemented    |
+|hands           |hands                      |implemented    |
+|hand            |hand                       |implemented    |
+|(missing)       |pointables                 |not defined    |
+|(missing)       |pointable                  |not defined    |
+|(missing)       |fingers                    |not defined    |
+|(missing)       |finger                     |not defined    |
+|(missing)       |tools                      |not defined    |
+|gesture         |gesture                    |implemented    |
+|gestures        |gestures()                 |implemented    |
+|gestures        |gestures(frame)            |not implemented|
+|(missing)       |translation                |not defined    |
+|(missing)       |translationProbability     |not defined    |
+|(missing)       |rotationAxis               |not defined    |
+|(missing)       |rotationAngle(frame)       |not defined    |
+|(missing)       |rotationAngle(frame,vector)|not defined    |
+|(missing)       |rotationMatrix             |not defined    |
+|(missing)       |rotationProbability        |not defined    |
+|(missing)       |scaleFactor                |not defined    |
+|(missing)       |scaleProbability           |not defined    |
+|(missing)       |interactionBox             |not defined    |
+|valid?          |isValid                    |implemented    |
+|(missing)       |operator==                 |not defined    |
+|(missing)       |operator!=                 |not defined    |
+|to_s            |toString                   |implemented    |
+
 
