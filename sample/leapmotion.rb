@@ -4,10 +4,10 @@ class MyListener < LeapMotion::Listener
   end
   def on_connect(controller)
     puts "on_connect"
-	controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_SWIPE)
-	controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_CIRCLE)
-	controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_SCREEN_TAP)
-	controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_KEY_TAP)
+    controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_SWIPE)
+    controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_CIRCLE)
+    controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_SCREEN_TAP)
+    controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_KEY_TAP)
   end
   def on_disconnect(controller)
     puts "on_disconnect"
