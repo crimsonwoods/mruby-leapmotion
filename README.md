@@ -28,8 +28,23 @@ and run 'make' command.
 ----
 
 - LeapMotion
+- LeapMotion::Gesture::Type
+- LeapMotion::Gesture::State
 
+## LeapMotion::Gesture::Type
 
+- TYPE_INVALID
+- TYPE_SWIPE
+- TYPE_CIRCLE
+- TYPE_SCREEN_TAP
+- TYPE_KEY_TAP
+
+## LeapMotion::Gesture::State
+
+- STATE_INVALID
+- STATE_START
+- STATE_UPDATE
+- STATE_STOP
 
 # Class
 ----
@@ -42,4 +57,26 @@ and run 'make' command.
 - LeapMotion::Hand
 - LeapMotion::FingerList
 - LeapMotion::Finger
+- LeapMotion::GestureList
+- LeapMotion::Gesture
+- LeapMotion::SwipeGesture
+- LeapMotion::CircleGesture
+- LeapMotion::ScreenTapGesture
+- LeapMotion::KeyTapGesture
+
+## LeapMotion::Controller
+
+### Instance methods
+
+|Name            |Status         |
+|:---------------|:-------------:|
+|add_listener    |implemented    |
+|remove_listener |implemented    |
+|frame           |implemented    |
+|config          |not implemented|
+|devices         |not implemented|
+|connected?      |implemented    |
+|focus?          |implemented    |
+|enable_gesture  |implemented    |
+|gesture_enabled?|implemented    |
 

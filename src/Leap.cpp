@@ -310,7 +310,7 @@ mrb_leapmotion_keytapgesture_free(mrb_state *mrb, void *ptr)
 }
 
 /*
- * LeapMotion::Listener
+ * LeapMotion::Controller
  */
 
 static mrb_value
@@ -449,7 +449,7 @@ mrb_leapmotion_controller_is_gesture_enabled(mrb_state *mrb, mrb_value self)
 }
 
 /*
- * LeapMotion::Listener class methods
+ * LeapMotion::Listener
  */
 
 static mrb_value
