@@ -67,13 +67,30 @@ build_config.rb:
 - STATE_UPDATE
 - STATE_STOP
 
+## LeapMotion::Controller::PolicyFlag
+
+- POLICY_DEFAULT
+- POLICY_BACKGROUND_FRAMES
+
+## LeapMotion::Config::ValueType
+
+- TYPE_UNKNOWN
+- TYPE_BOOLEAN
+- TYPE_INT32
+- TYPE_FLOAT
+- TYPE_STRING
+
 # Class
 ----
 
+- LeapMotion::Config
 - LeapMotion::Controller
 - LeapMotion::Listener
 - LeapMotion::Vector
+- LeapMotion::PointableList
 - LeapMotion::Pointable
+- LeapMotion::ToolList
+- LeapMotion::Tool
 - LeapMotion::HandList
 - LeapMotion::Hand
 - LeapMotion::FingerList
@@ -89,21 +106,22 @@ build_config.rb:
 
 ### Instance methods
 
-|Name            |LeapSDK API      |Status         |
-|:---------------|:----------------|:-------------:|
-|add_listener    |addListener      |implemented    |
-|remove_listener |removeListener   |implemented    |
-|frame           |frame            |implemented    |
-|config          |config           |not implemented|
-|devices         |devices          |not implemented|
-|connected?      |isConnected      |implemented    |
-|focus?          |hasFocus         |implemented    |
-|enable_gesture  |enableGesture    |implemented    |
-|gesture_enabled?|isGestureEnabled |implemented    |
-|(missing)       |policyFlags      |not defined    |
-|(missing)       |setPolicyFlags   |not defined    |
-|(missing)       |locatedScreens   |not defined    |
-|(missing)       |calibratedScreens|not defined    |
+|Name              |LeapSDK API      |Status         |
+|:-----------------|:----------------|:-------------:|
+|initialize        |ctor             |implemented    |
+|policy_flags      |policyFlags      |implemented    |
+|policy_flags=     |setPolicyFlags   |implemented    |
+|add_listener      |addListener      |implemented    |
+|remove_listener   |removeListener   |implemented    |
+|frame             |frame            |implemented    |
+|config            |config           |implemented    |
+|devices           |devices          |not implemented|
+|located_screens   |locatedScreens   |not implemented|
+|calibrated_screens|calibratedScreens|not implemented|
+|enable_gesture    |enableGesture    |implemented    |
+|gesture_enabled?  |isGestureEnabled |implemented    |
+|connected?        |isConnected      |implemented    |
+|focus?            |hasFocus         |implemented    |
 
 ## LeapMotion::Listener
 
@@ -123,34 +141,35 @@ build_config.rb:
 
 ### Instance methods
 
-|Name            |LeapSDK API                |Status         |
-|:---------------|:--------------------------|:-------------:|
-|id              |id                         |implemented    |
-|timestamp       |timestamp                  |implemented    |
-|hands           |hands                      |implemented    |
-|hand            |hand                       |implemented    |
-|(missing)       |pointables                 |not defined    |
-|(missing)       |pointable                  |not defined    |
-|(missing)       |fingers                    |not defined    |
-|(missing)       |finger                     |not defined    |
-|(missing)       |tools                      |not defined    |
-|gesture         |gesture                    |implemented    |
-|gestures        |gestures()                 |implemented    |
-|gestures        |gestures(frame)            |not implemented|
-|(missing)       |translation                |not defined    |
-|(missing)       |translationProbability     |not defined    |
-|(missing)       |rotationAxis               |not defined    |
-|(missing)       |rotationAngle(frame)       |not defined    |
-|(missing)       |rotationAngle(frame,vector)|not defined    |
-|(missing)       |rotationMatrix             |not defined    |
-|(missing)       |rotationProbability        |not defined    |
-|(missing)       |scaleFactor                |not defined    |
-|(missing)       |scaleProbability           |not defined    |
-|(missing)       |interactionBox             |not defined    |
-|valid?          |isValid                    |implemented    |
-|(missing)       |operator==                 |not defined    |
-|(missing)       |operator!=                 |not defined    |
-|to_s            |toString                   |implemented    |
+|Name                      |LeapSDK API                |Status         |
+|:-------------------------|:--------------------------|:-------------:|
+|id                        |id                         |implemented    |
+|timestamp                 |timestamp                  |implemented    |
+|hands                     |hands                      |implemented    |
+|hand                      |hand                       |implemented    |
+|pointables                |pointables                 |implemented    |
+|pointable(id)             |pointable(id)              |implemented    |
+|fingers                   |fingers                    |implemented    |
+|finger(id)                |finger(id)                 |implemented    |
+|tools                     |tools                      |implemented    |
+|tool(id)                  |tool(id)                   |implemented    |
+|gesture(id)               |gesture                    |implemented    |
+|gestures                  |gestures()                 |implemented    |
+|gestures(frame)           |gestures(frame)            |implemented    |
+|translation               |translation                |implemented    |
+|translation_probability   |translationProbability     |implemented    |
+|rotation_axis             |rotationAxis               |implemented    |
+|rotation_angle            |rotationAngle(frame)       |implemented    |
+|rotation_angle(frame,axis)|rotationAngle(frame,vector)|implemented    |
+|rotation_matrix           |rotationMatrix             |implemented    |
+|rotation_probability      |rotationProbability        |implemented    |
+|scale_factor              |scaleFactor                |implemented    |
+|scale_probability         |scaleProbability           |implemented    |
+|interaction_box           |interactionBox             |not implemented|
+|valid?                    |isValid                    |implemented    |
+|==                        |operator==                 |implemented    |
+|(missing)                 |operator!=                 |not defined    |
+|to_s                      |toString                   |implemented    |
 
 # License
 
