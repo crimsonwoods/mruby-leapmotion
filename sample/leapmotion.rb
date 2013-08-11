@@ -62,6 +62,20 @@ end
 
 controller = LeapMotion::Controller.new
 listener = MyListener.new
+
+puts "[Configuration]"
+puts "Gesture.Circle.MinRadius             = " + controller.config.float("Gesture.Circle.MinRadius").to_s + " [mm]"
+puts "Gesture.Circle.MinArc                = " + controller.config.float("Gesture.Circle.MinArc").to_s + " [radians]"
+puts "Gesture.Swipe.MinLength              = " + controller.config.float("Gesture.Swipe.MinLength").to_s + " [mm]"
+puts "Gesture.Swipe.MinVelocity            = " + controller.config.float("Gesture.Swipe.MinVelocity").to_s + " [mm/s]"
+puts "Gesture.KeyTap.MinDownVelocity       = " + controller.config.float("Gesture.KeyTap.MinDownVelocity").to_s + " [mm/s]"
+puts "Gesture.KeyTap.HistorySeconds        = " + controller.config.float("Gesture.KeyTap.HistorySeconds").to_s + " [s]"
+puts "Gesture.KeyTap.MinDistance           = " + controller.config.float("Gesture.KeyTap.MinDistance").to_s + " [mm]"
+puts "Gesture.ScreenTap.MinForwardVelocity = " + controller.config.float("Gesture.ScreenTap.MinForwardVelocity").to_s + " [mm/s]"
+puts "Gesture.ScreenTap.HistorySeconds     = " + controller.config.float("Gesture.ScreenTap.HistorySeconds").to_s + " [s]"
+puts "Gesture.ScreenTap.MinDistance        = " + controller.config.float("Gesture.ScreenTap.MinDistance").to_s + " [mm]"
+puts ""
+
 controller.add_listener(listener)
 
 puts "start LeapMotion sample code."
