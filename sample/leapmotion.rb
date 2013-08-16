@@ -8,6 +8,9 @@ class MyListener < LeapMotion::Listener
     controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_CIRCLE)
     controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_SCREEN_TAP)
     controller.enable_gesture(LeapMotion::Gesture::Type::TYPE_KEY_TAP)
+    controller.devices.each do |dev|
+      puts "  device: " + dev.to_s
+    end
   end
   def on_disconnect(controller)
     puts "on_disconnect"
