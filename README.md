@@ -7,14 +7,17 @@ _mruby-leapmotion_ wrapped 'LeapSDK'.
 ----
 
 - Ubuntu 12.04 LTS
+- Mac OS X
 
 # How to build
 ----
 
 1. download and extract [LeapSDK](https://developer.leapmotion.com/downloads)
 2. edit your 'build_config.rb'
-3. run 'make' command.
+3. set library path to load a library contained into LeapSDK (libLeap.so, libLeap.dylib).
+4. run 'make' command.
 
+## for Ubuntu
 
 build_config.rb:
 
@@ -29,6 +32,26 @@ build_config.rb:
       linker.library_paths << "/path/to/your/LeapSDK/lib/<platform>/"
     end
 
+## for Mac
+
+build_config.rb:
+
+    toolchain :clang
+    
+    ...
+    
+    conf.gem :github => 'crimsonwoods/mruby-leapmotion', :branch => 'master'
+    
+	conf.cxx do |cxx|
+      cxx.flags << "-stdlib=libc++"
+      cxx.include_paths << "/path/to/your/LeapSDK/include"
+    end
+    
+    conf.linker do |linker|
+      linker.libraries << %w(c++ mLeap)
+      linker.library_paths << "/path/to/your/LeapSDK/lib/libc++/"
+    end
+
 
 # Sample
 ----
@@ -40,7 +63,7 @@ build_config.rb:
 
 1. connect your Leap Motion
 2. wait for chaning, the color of indicator will be green.
-3. set LeapSDK library path to 'LD_LIBRARY_PATH'.
+3. set LeapSDK library path to 'LD_LIBRARY_PATH' (use 'DYLD_LIBRARY_PATH' instead for Mac).
 4. run mruby with sample code or your code.
 
 
