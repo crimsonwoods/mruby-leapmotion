@@ -21,7 +21,6 @@ build_config.rb:
     conf.gem :github => 'crimsonwoods/mruby-leapmotion', :branch => 'master'
     
     conf.cxx do |cxx|
-      cxx.flags << "-std=c++11"
       cxx.include_paths << "/path/to/your/LeapSDK/include"
     end
     
@@ -80,27 +79,40 @@ build_config.rb:
 - TYPE_FLOAT
 - TYPE_STRING
 
+## LeapMotion::Pointable::Zone
+
+- ZONE_NONE
+- ZONE_HOVERING
+- ZONE_TOUCHING
+
+
 # Class
 ----
 
 - LeapMotion::Config
 - LeapMotion::Controller
-- LeapMotion::Listener
-- LeapMotion::Vector
-- LeapMotion::PointableList
-- LeapMotion::Pointable
-- LeapMotion::ToolList
-- LeapMotion::Tool
-- LeapMotion::HandList
-- LeapMotion::Hand
+- LeapMotion::DeviceList
+- LeapMotion::Device
 - LeapMotion::FingerList
-- LeapMotion::Finger
 - LeapMotion::GestureList
 - LeapMotion::Gesture
-- LeapMotion::SwipeGesture
-- LeapMotion::CircleGesture
-- LeapMotion::ScreenTapGesture
-- LeapMotion::KeyTapGesture
+    - LeapMotion::CircleGesture
+    - LeapMotion::KeyTapGesture
+    - LeapMotion::ScreenTapGesture
+    - LeapMotion::SwipeGesture
+- LeapMotion::HandList
+- LeapMotion::Hand
+- LeapMotion::InteractionBox
+- LeapMotion::Listener
+- LeapMotion::PointableList
+- LeapMotion::Pointable
+    - LeapMotion::Finger
+    - LeapMotion::Tool
+- LeapMotion::ScreenList
+- LeapMotion::Screen
+- LeapMotion::ToolList
+- LeapMotion::Vector
+- LeapMotion::Matrix
 
 ## LeapMotion::Controller
 
@@ -115,9 +127,9 @@ build_config.rb:
 |remove_listener   |removeListener   |implemented    |
 |frame             |frame            |implemented    |
 |config            |config           |implemented    |
-|devices           |devices          |not implemented|
-|located_screens   |locatedScreens   |not implemented|
-|calibrated_screens|calibratedScreens|not implemented|
+|devices           |devices          |implemented    |
+|located_screens   |locatedScreens   |implemented    |
+|calibrated_screens|calibratedScreens|implemented    |
 |enable_gesture    |enableGesture    |implemented    |
 |gesture_enabled?  |isGestureEnabled |implemented    |
 |connected?        |isConnected      |implemented    |
@@ -165,10 +177,59 @@ build_config.rb:
 |rotation_probability      |rotationProbability        |implemented    |
 |scale_factor              |scaleFactor                |implemented    |
 |scale_probability         |scaleProbability           |implemented    |
-|interaction_box           |interactionBox             |not implemented|
+|interaction_box           |interactionBox             |implemented    |
 |valid?                    |isValid                    |implemented    |
 |==                        |operator==                 |implemented    |
 |(missing)                 |operator!=                 |not defined    |
+|to_s                      |toString                   |implemented    |
+
+## LeapMotion::HandList
+
+## Instance methods
+
+|Name       |LeapSDK API  |Status         |
+|:----------|:------------|:-------------:|
+|count      |count        |implemented    |
+|empty?     |empty        |implemented    |
+|[]         |operator[]   |implemented    |
+|leftmost   |leftmost     |implemented    |
+|rightmost  |rightmost    |implemented    |
+|frontmost  |frontmost    |implemented    |
+|each       |(missing)    |implemented    |
+|(missing)  |begin        |not defined    |
+|(missing)  |end          |not defined    |
+
+## LeapMotion::Hand
+
+### Instance methods
+
+|Name                      |LeapSDK API                |Status         |
+|:-------------------------|:--------------------------|:-------------:|
+|id                        |id                         |implemented    |
+|frame                     |frame                      |implemented    |
+|pointables                |pointables                 |implemented    |
+|pointable                 |pointable                  |implemented    |
+|fingers                   |fingers                    |implemented    |
+|finger                    |finger                     |implemented    |
+|tools                     |tools                      |implemented    |
+|tool                      |tool                       |implemented    |
+|palm_position             |palmPosition               |implemented    |
+|palm_velocity             |palmVelocity               |implemented    |
+|palm_normal               |palmNormal                 |implemented    |
+|direction                 |direction                  |implemented    |
+|sphere_center             |sphereCenter               |implemented    |
+|sphere_radius             |sphereRadius               |implemented    |
+|translation               |translation                |implemented    |
+|translation_probability   |translationProbability     |implemented    |
+|rotation_axis             |rotationAxis               |implemented    |
+|rotation_angle            |rotationAngle              |implemented    |
+|rotation_matrix           |rotationMatrix             |implemented    |
+|rotation_probability      |rotationProbability        |implemented    |
+|scale_factor              |scaleFactor                |implemented    |
+|scale_probability         |scaleProbability           |implemented    |
+|valid?                    |isValid                    |implemented    |
+|==                        |operator==                 |implemented    |
+|!=                        |operator!=                 |not defined    |
 |to_s                      |toString                   |implemented    |
 
 # License
