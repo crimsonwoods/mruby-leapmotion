@@ -106,7 +106,11 @@ extern "C" {
  */
 class mrb_leapmotion_listener_proxy : public Leap::Listener {
 private:
+#if defined(_MSC_VER)
+  typedef std::map<DWORD, mrb_state*> thread_map_type;
+#else
   typedef std::map<pthread_t, mrb_state*> thread_map_type;
+#endif
 
   struct mrb_state_closer {
     void operator () (thread_map_type::value_type const &v) const {
@@ -115,7 +119,11 @@ private:
   };
 
   mrb_state *lookup_mrb_state() const {
+#if defined(_MSC_VER)
+    thread_map_type::const_iterator it = state_map_.find(::GetCurrentThreadId());
+#else
     thread_map_type::const_iterator it = state_map_.find(pthread_self());
+#endif
     if (it == state_map_.end()) {
       return NULL;
     }
@@ -127,7 +135,11 @@ private:
     if (new_state == NULL) {
       return NULL;
     }
+#if defined(_MSC_VER)
+    if (!state_map_.insert(thread_map_type::value_type(::GetCurrentThreadId(), new_state)).second) {
+#else
     if (!state_map_.insert(thread_map_type::value_type(pthread_self(), new_state)).second) {
+#endif
       mrb_close(new_state);
       new_state = NULL;
     }
@@ -4373,7 +4385,7 @@ mrb_kernel_sleep(mrb_state *mrb, mrb_value self)
   mrb_int period;
   mrb_get_args(mrb, "i", &period);
 #if defined(_MSC_VER)
-  ::Sleep(period);
+  ::Sleep(period * 1000);
 #else
   if (0 != sleep(period)) {
     return mrb_false_value();
