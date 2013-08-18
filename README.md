@@ -8,6 +8,7 @@ _mruby-leapmotion_ wrapped 'LeapSDK'.
 
 - Ubuntu 12.04 LTS
 - Mac OS X
+- Windows
 
 # How to build
 ----
@@ -42,7 +43,7 @@ build_config.rb:
     
     conf.gem :github => 'crimsonwoods/mruby-leapmotion', :branch => 'master'
     
-	conf.cxx do |cxx|
+    conf.cxx do |cxx|
       cxx.flags << "-stdlib=libc++"
       cxx.include_paths << "/path/to/your/LeapSDK/include"
     end
@@ -52,6 +53,30 @@ build_config.rb:
       linker.library_paths << "/path/to/your/LeapSDK/lib/libc++/"
     end
 
+## for Windows
+
+build_config.rb:
+
+    toolchain :vs2012
+    
+    ...
+    
+    conf.gem :github => 'crimsonwoods/mruby-leapmotion', :branch => 'master'
+
+    conf.cxx do |cxx|
+      cxx.include_paths << "X:\\path\\to\\your\\LeapSDK\\include"
+    end
+
+    conf.linker do |linker|
+      linker.libraries << %w(Leapd)
+      linker.library_paths << "X:\\path\\to\\your\\LeapSDK\\lib\\<platform>"
+    end
+
+# Restrictions
+
+## for Windows
+
+1. Use 'Leapd.dll' (for debug) instead of 'Leap.dll'. Release version DLL is not working currently.
 
 # Sample
 ----
