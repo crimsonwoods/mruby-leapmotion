@@ -3,10 +3,14 @@
 #include "mruby/data.h"
 #include "mruby/variable.h"
 #include "mruby/string.h"
+#include "mruby/proc.h"
+#include "mruby/irep.h"
+#include "mruby/gc.h"
 #include "Leap.h"
 #include <algorithm>
 #include <utility>
 #include <memory>
+#include <map>
 #if defined(_MSC_VER)
 #include <windows.h>
 #else
@@ -91,44 +95,111 @@ def_type_map(Leap::Screen,           mrb_leapmotion_screen_t,           mrb_leap
 def_type_map(Leap::Vector,           mrb_leapmotion_vector_t,           mrb_leapmotion_vector_type);
 def_type_map(Leap::Matrix,           mrb_leapmotion_matrix_t,           mrb_leapmotion_matrix_type);
 
+extern "C" {
+  void mrb_final_core(mrb_state*);
+  void mrb_free_symtbl(mrb_state *mrb);
+  void mrb_free_heap(mrb_state *mrb);
+}
+
 /*
  * Proxy listener class to delivery events.
  */
 class mrb_leapmotion_listener_proxy : public Leap::Listener {
+private:
+  typedef std::map<pthread_t, mrb_state*> thread_map_type;
+
+  struct mrb_state_closer {
+    void operator () (thread_map_type::value_type const &v) const {
+      mrb_close_for_thread(v.second);
+    }
+  };
+
+  mrb_state *lookup_mrb_state() const {
+    thread_map_type::const_iterator it = state_map_.find(pthread_self());
+    if (it == state_map_.end()) {
+      return NULL;
+    }
+    return it->second;
+  }
+
+  mrb_state *register_new_mrb_state() {
+    mrb_state *new_state = mrb_open_for_thread(mrb_);
+    if (new_state == NULL) {
+      return NULL;
+    }
+    if (!state_map_.insert(thread_map_type::value_type(pthread_self(), new_state)).second) {
+      mrb_close(new_state);
+      new_state = NULL;
+    }
+    return new_state;
+  }
+
+  void unregister_all_mrb_state() {
+    std::for_each(state_map_.begin(), state_map_.end(), mrb_state_closer());
+  }
+
+  static mrb_state *mrb_open_for_thread(mrb_state *original) {
+    mrb_state *mrb = mrb_open_allocf(original->allocf, original->ud);
+    if (mrb != NULL) {
+      mrb_free(mrb, mrb->irep);
+      mrb->irep      = original->irep;
+      mrb->irep_len  = original->irep_len;
+      mrb->irep_capa = original->irep_capa;
+      mrb->name2sym  = original->name2sym;
+    }
+    return mrb;
+  }
+
+  static void mrb_close_for_thread(mrb_state *state) {
+    mrb_final_core(state);
+    mrb_gc_free_gv(state);
+    mrb_free_heap(state);
+    mrb_free(state, state);
+  }
+
+  void invoke_callback(char const * const name) {
+    mrb_state *mrb = lookup_mrb_state();
+    if (mrb == NULL) {
+      mrb = register_new_mrb_state();
+    }
+    if (mrb == NULL) {
+      return;
+    }
+    mrb_value controller = mrb_iv_get(mrb, listener_, mrb_intern(mrb, "controller"));
+    mrb_funcall(mrb, listener_, name, 1, controller);
+  }
 public:
   mrb_leapmotion_listener_proxy(mrb_state *mrb, mrb_value &self) : mrb_(mrb), listener_(self) {
   }
+  ~mrb_leapmotion_listener_proxy() {
+    unregister_all_mrb_state();
+  }
   virtual void onInit(Leap::Controller const &c) {
-    mrb_value controller = mrb_iv_get(mrb_, listener_, mrb_intern(mrb_, "controller"));
-    mrb_funcall(mrb_, listener_, "on_init", 1, controller);
+    invoke_callback("on_init");
   }
   virtual void onConnect(Leap::Controller const &c) {
-    mrb_value controller = mrb_iv_get(mrb_, listener_, mrb_intern(mrb_, "controller"));
-    mrb_funcall(mrb_, listener_, "on_connect", 1, controller);
+    invoke_callback("on_connect");
   }
   virtual void onDisconnect(Leap::Controller const &c) {
-    mrb_value controller = mrb_iv_get(mrb_, listener_, mrb_intern(mrb_, "controller"));
-    mrb_funcall(mrb_, listener_, "on_disconnect", 1, controller);
+    invoke_callback("on_disconnect");
   }
   virtual void onExit(Leap::Controller const &c) {
-    mrb_value controller = mrb_iv_get(mrb_, listener_, mrb_intern(mrb_, "controller"));
-    mrb_funcall(mrb_, listener_, "on_exit", 1, controller);
+    invoke_callback("on_exit");
   }
   virtual void onFrame(Leap::Controller const &c) {
-    mrb_value controller = mrb_iv_get(mrb_, listener_, mrb_intern(mrb_, "controller"));
-    mrb_funcall(mrb_, listener_, "on_frame", 1, controller);
+    invoke_callback("on_frame");
   }
   virtual void onFocusGained(Leap::Controller const &c) {
-    mrb_value controller = mrb_iv_get(mrb_, listener_, mrb_intern(mrb_, "controller"));
-    mrb_funcall(mrb_, listener_, "on_focus_gained", 1, controller);
+    invoke_callback("on_focus_gained");
   }
   virtual void onFocusLost(Leap::Controller const &c) {
-    mrb_value controller = mrb_iv_get(mrb_, listener_, mrb_intern(mrb_, "controller"));
-    mrb_funcall(mrb_, listener_, "on_focus_lost", 1, controller);
+    invoke_callback("on_focus_lost");
   }
+
 private:
   mrb_state *mrb_;
   mrb_value listener_;
+  thread_map_type state_map_;
 };
 
 /*
