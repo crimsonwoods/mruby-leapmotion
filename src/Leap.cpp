@@ -4468,11 +4468,15 @@ mrb_mruby_leapmotion_gem_init(mrb_state *mrb)
   mrb_define_method(mrb, class_controller, "connected?",         mrb_leapmotion_controller_is_connected,       ARGS_NONE());
   mrb_define_method(mrb, class_controller, "has_focus?",         mrb_leapmotion_controller_has_focus,          ARGS_NONE());
 
+  int arena_size = mrb_gc_arena_save(mrb);
+
   RClass *module_policy_flag = mrb_define_module_under(mrb, class_controller, "PolicyFlag");
   mrb_define_const(mrb, module_policy_flag, "POLICY_DEFAULT",
     mrb_fixnum_value(Leap::Controller::POLICY_DEFAULT));
   mrb_define_const(mrb, module_policy_flag, "POLICY_BACKGROUND_FRAMES",
     mrb_fixnum_value(Leap::Controller::POLICY_BACKGROUND_FRAMES));
+
+  mrb_gc_arena_restore(mrb, arena_size);
 
   mrb_define_method(mrb, class_config, "type",    mrb_leapmotion_config_get_type,   ARGS_REQ(1));
   mrb_define_method(mrb, class_config, "bool",    mrb_leapmotion_config_get_bool,   ARGS_REQ(1));
@@ -4485,6 +4489,8 @@ mrb_mruby_leapmotion_gem_init(mrb_state *mrb)
   mrb_define_method(mrb, class_config, "string=", mrb_leapmotion_config_set_string, ARGS_REQ(2));
   mrb_define_method(mrb, class_config, "save",    mrb_leapmotion_config_save,       ARGS_NONE());
 
+  arena_size = mrb_gc_arena_save(mrb);
+
   RClass *module_value_type = mrb_define_module_under(mrb, class_config, "ValueType");
   mrb_define_const(mrb, module_value_type, "TYPE_UNKNOWN",
     mrb_fixnum_value(Leap::Config::TYPE_UNKNOWN));
@@ -4496,6 +4502,8 @@ mrb_mruby_leapmotion_gem_init(mrb_state *mrb)
     mrb_fixnum_value(Leap::Config::TYPE_FLOAT));
   mrb_define_const(mrb, module_value_type, "TYPE_STRING",
     mrb_fixnum_value(Leap::Config::TYPE_STRING));
+
+  mrb_gc_arena_restore(mrb, arena_size);
 
   mrb_define_method(mrb, class_devicelist, "count",  mrb_leapmotion_devicelist_count,    ARGS_NONE());
   mrb_define_method(mrb, class_devicelist, "empty?", mrb_leapmotion_devicelist_is_empty, ARGS_NONE());
@@ -4660,6 +4668,8 @@ mrb_mruby_leapmotion_gem_init(mrb_state *mrb)
   mrb_define_method(mrb, class_gesturelist, "append", mrb_leapmotion_gesturelist_append,   ARGS_REQ(1));
   mrb_define_method(mrb, class_gesturelist, "each",   mrb_leapmotion_gesturelist_each,     ARGS_BLOCK());
 
+  arena_size = mrb_gc_arena_save(mrb);
+
   RClass *module_gesture_type = mrb_define_module_under(mrb, class_gesture, "Type");
   mrb_define_const(mrb, module_gesture_type, "TYPE_INVALID",    mrb_fixnum_value(Leap::Gesture::TYPE_INVALID));
   mrb_define_const(mrb, module_gesture_type, "TYPE_SWIPE",      mrb_fixnum_value(Leap::Gesture::TYPE_SWIPE));
@@ -4672,6 +4682,8 @@ mrb_mruby_leapmotion_gem_init(mrb_state *mrb)
   mrb_define_const(mrb, module_gesture_state, "STATE_START",   mrb_fixnum_value(Leap::Gesture::STATE_START));
   mrb_define_const(mrb, module_gesture_state, "STATE_UPDATE",  mrb_fixnum_value(Leap::Gesture::STATE_UPDATE));
   mrb_define_const(mrb, module_gesture_state, "STATE_STOP",    mrb_fixnum_value(Leap::Gesture::STATE_STOP));
+
+  mrb_gc_arena_restore(mrb, arena_size);
 
   mrb_define_method(mrb, class_gesture, "type",            mrb_leapmotion_gesture_get_type,         ARGS_NONE());
   mrb_define_method(mrb, class_gesture, "state",           mrb_leapmotion_gesture_state,            ARGS_NONE());
