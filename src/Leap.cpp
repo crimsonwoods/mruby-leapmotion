@@ -177,8 +177,10 @@ private:
     if (mrb == NULL) {
       return;
     }
-    mrb_value controller = mrb_iv_get(mrb, listener_, mrb_intern(mrb, "controller"));
-    mrb_funcall(mrb, listener_, name, 1, controller);
+    mrb_value controller = mrb_iv_get(mrb, listener_, mrb_intern2(mrb, "controller", 10));
+    int const arena_size = mrb_gc_arena_save(mrb);
+    (void)mrb_funcall(mrb, listener_, name, 1, controller);
+    mrb_gc_arena_restore(mrb, arena_size);
   }
 public:
   mrb_leapmotion_listener_proxy(mrb_state *mrb, mrb_value &self) : mrb_(mrb), listener_(self) {
@@ -730,7 +732,7 @@ mrb_leapmotion_controller_add_listener(mrb_state *mrb, mrb_value self)
     mrb_raise(mrb, E_ARGUMENT_ERROR, "incomptible data type argument is suppliced.");
   }
 
-  mrb_iv_set(mrb, listener, mrb_intern(mrb, "controller"), self);
+  mrb_iv_set(mrb, listener, mrb_intern2(mrb, "controller", 10), self);
 
   return cdata->obj->addListener(*ldata->obj) ? mrb_true_value() : mrb_false_value();
 }
