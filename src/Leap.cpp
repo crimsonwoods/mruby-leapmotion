@@ -153,10 +153,6 @@ private:
   static mrb_state *mrb_open_for_thread(mrb_state *original) {
     mrb_state *mrb = mrb_open_allocf(original->allocf, original->ud);
     if (mrb != NULL) {
-      mrb_free(mrb, mrb->irep);
-      mrb->irep      = original->irep;
-      mrb->irep_len  = original->irep_len;
-      mrb->irep_capa = original->irep_capa;
       mrb->name2sym  = original->name2sym;
     }
     return mrb;
@@ -177,7 +173,7 @@ private:
     if (mrb == NULL) {
       return;
     }
-    mrb_value controller = mrb_iv_get(mrb, listener_, mrb_intern2(mrb, "controller", 10));
+    mrb_value controller = mrb_iv_get(mrb, listener_, mrb_intern(mrb, "controller", 10));
     int const arena_size = mrb_gc_arena_save(mrb);
     (void)mrb_funcall(mrb, listener_, name, 1, controller);
     mrb_gc_arena_restore(mrb, arena_size);
@@ -732,7 +728,7 @@ mrb_leapmotion_controller_add_listener(mrb_state *mrb, mrb_value self)
     mrb_raise(mrb, E_ARGUMENT_ERROR, "incomptible data type argument is suppliced.");
   }
 
-  mrb_iv_set(mrb, listener, mrb_intern2(mrb, "controller", 10), self);
+  mrb_iv_set(mrb, listener, mrb_intern(mrb, "controller", 10), self);
 
   return cdata->obj->addListener(*ldata->obj) ? mrb_true_value() : mrb_false_value();
 }
@@ -757,7 +753,7 @@ mrb_leapmotion_controller_remove_listener(mrb_state *mrb, mrb_value self)
   }
 
   if (cdata->obj->removeListener(*ldata->obj)) {
-    mrb_iv_set(mrb, listener, mrb_intern(mrb, "controller"), mrb_nil_value());
+    mrb_iv_set(mrb, listener, mrb_intern_cstr(mrb, "controller"), mrb_nil_value());
     return mrb_true_value();
   }
 
@@ -3837,7 +3833,7 @@ mrb_leapmotion_screen_intersect(mrb_state *mrb, mrb_value self)
     if (pdata != NULL) {
       if (mrb_type(argv[2]) == MRB_TT_FLOAT) {
         return mrb_leapmotion_obj_make(mrb, data->obj->intersect(*pdata->obj, mrb_bool(argv[1]), mrb_float(argv[2])));
-      } else if (mrb_respond_to(mrb, argv[2], mrb_intern2(mrb, "to_f", 4))) {
+      } else if (mrb_respond_to(mrb, argv[2], mrb_intern(mrb, "to_f", 4))) {
         mrb_value f = mrb_funcall(mrb, argv[2], "to_f", 0);
         return mrb_leapmotion_obj_make(mrb, data->obj->intersect(*pdata->obj, mrb_bool(argv[1]), mrb_float(f)));
       }
@@ -3863,7 +3859,7 @@ mrb_leapmotion_screen_intersect(mrb_state *mrb, mrb_value self)
       static_cast<mrb_leapmotion_vector_t*>(DATA_PTR(argv[1]));
     if (mrb_float_p(argv[3])) {
       return mrb_leapmotion_obj_make(mrb, data->obj->intersect(*vdata_position->obj, *vdata_direction->obj, mrb_bool(argv[2]), mrb_float(argv[3])));
-    } else if (mrb_respond_to(mrb, argv[3], mrb_intern2(mrb, "to_f", 4))) {
+    } else if (mrb_respond_to(mrb, argv[3], mrb_intern(mrb, "to_f", 4))) {
       mrb_value f = mrb_funcall(mrb, argv[3], "to_f", 0);
       return mrb_leapmotion_obj_make(mrb, data->obj->intersect(*vdata_position->obj, *vdata_direction->obj, mrb_bool(argv[2]), mrb_float(f)));
     }
@@ -4076,7 +4072,7 @@ mrb_leapmotion_matrix_initialize(mrb_state *mrb, mrb_value self)
     mrb_data_check_type(mrb, argv[0], &mrb_leapmotion_vector_type);
     if (mrb_type(argv[1]) == MRB_TT_FLOAT) {
       data = mrb_leapmotion_matrix_alloc(mrb, static_cast<mrb_leapmotion_vector_t*>(DATA_PTR(argv[0])), mrb_float(argv[1]));
-    } else if (mrb_respond_to(mrb, argv[1], mrb_intern2(mrb, "to_f", 4))) {
+    } else if (mrb_respond_to(mrb, argv[1], mrb_intern(mrb, "to_f", 4))) {
       mrb_value f = mrb_funcall(mrb, argv[1], "to_f", 0);
       data = mrb_leapmotion_matrix_alloc(mrb, static_cast<mrb_leapmotion_vector_t*>(DATA_PTR(argv[0])), mrb_float(f));
     } else {
@@ -4096,7 +4092,7 @@ mrb_leapmotion_matrix_initialize(mrb_state *mrb, mrb_value self)
         static_cast<mrb_leapmotion_vector_t*>(DATA_PTR(argv[0])),
         static_cast<mrb_leapmotion_vector_t*>(DATA_PTR(argv[1])),
         static_cast<mrb_leapmotion_vector_t*>(DATA_PTR(argv[2])));
-    } else if (mrb_respond_to(mrb, argv[1], mrb_intern2(mrb, "to_f", 4))) {
+    } else if (mrb_respond_to(mrb, argv[1], mrb_intern(mrb, "to_f", 4))) {
       mrb_value f = mrb_funcall(mrb, argv[1], "to_f", 0);
       data = mrb_leapmotion_matrix_alloc(mrb,
         static_cast<mrb_leapmotion_vector_t*>(DATA_PTR(argv[0])),
